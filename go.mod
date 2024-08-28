@@ -1,4 +1,4 @@
-module github.com/knadh/go-pop3
+module github.com/jghms/go-pop3
 
 go 1.16
 
