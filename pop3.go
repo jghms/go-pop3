@@ -128,6 +128,19 @@ func (c *Conn) Send(b string) error {
 	return c.w.Flush()
 }
 
+// Upgrades the connection to TLS using the STLS command.
+func (c *Conn) Stls() error {
+	_, err := c.Cmd("STLS", false)
+	if err != nil {
+		return err
+	}
+	c.conn = tls.Client(c.conn, &tls.Config{InsecureSkipVerify: true})
+	c.r = bufio.NewReader(c.conn)
+	c.w = bufio.NewWriter(c.conn)
+
+	return nil
+}
+
 // Cmd sends a command to the server. POP3 responses are either single line or multi-line.
 // The first line always with -ERR in case of an error or +OK in case of a successful operation.
 // OK+ is always followed by a response on the same line which is either the actual response data
